@@ -1,0 +1,31 @@
+build: false
+
+image:
+  - Ubuntu
+  - Visual Studio 2015
+
+
+environment:
+  matrix:
+    - PYTHON_VERSION: 3
+      MINICONDA: C:\Miniconda
+for:
+-
+  matrix:
+    only:
+        - image: Visual Studio 2015
+        
+  install:
+     - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
+     - conda config --set always_yes yes --set changeps1 no
+     - conda update -q conda
+     - conda info -a
+     - "conda create -q -n test-environment python=%PYTHON_VERSION% numpy scipy nose"
+     - activate test-environment
+     - pip install coverage
+     - pip install -r requirements.txt
+     - python setup.py install
+
+
+test_script:
+  - nosetests
